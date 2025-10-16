@@ -1,37 +1,41 @@
 import cn from 'classnames';
 
-export const Tabs = ({ tabs, onTabSelected, activeTab }) => (
-  <div data-cy="TabsComponent">
-    <div className="tabs is-boxed">
-      <ul>
-        {tabs.map(tab => (
-          <li
-            key={tab.id}
-            className={cn({
-              'is-active': activeTab.id === tab.id,
-            })}
-            data-cy="Tab"
-          >
-            <a
-              href={`#${tab.id}`}
-              data-cy="TabLink"
-              onClick={event => {
-                event.preventDefault();
+export const Tabs = ({ tabs, activeTabId, onTabSelected }) => {
+  const active = tabs.find(t => t.id === activeTabId) || tabs[0];
 
-                if (![...event.target.classList].includes('is-active')) {
-                  onTabSelected(tab.id);
-                }
-              }}
+  return (
+    <div data-cy="TabsComponent">
+      <div className="tabs is-boxed">
+        <ul>
+          {tabs.map(tab => (
+            <li
+              key={tab.id}
+              className={cn({
+                'is-active': active.id === tab.id,
+              })}
+              data-cy="Tab"
             >
-              {tab.id}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
+              <a
+                href={`#${tab.id}`}
+                data-cy="TabLink"
+                onClick={event => {
+                  event.preventDefault();
 
-    <div className="block" data-cy="TabContent" key={activeTab.id}>
-      {activeTab.content}
+                  if (activeTabId !== tab.id) {
+                    onTabSelected(tab.id);
+                  }
+                }}
+              >
+                {tab.title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div className="block" data-cy="TabContent" key={activeTabId}>
+        {active.content}
+      </div>
     </div>
-  </div>
-);
+  );
+};
