@@ -1,6 +1,6 @@
 import cn from 'classnames';
 
-export const Tabs = ({ tabs, activeTabId, onTabSelected, activeTab }) => (
+export const Tabs = ({ tabs, onTabSelected, activeTab }) => (
   <div data-cy="TabsComponent">
     <div className="tabs is-boxed">
       <ul>
@@ -8,14 +8,20 @@ export const Tabs = ({ tabs, activeTabId, onTabSelected, activeTab }) => (
           <li
             key={tab.id}
             className={cn({
-              'is-active': activeTabId === tab.id,
+              'is-active': activeTab.id === tab.id,
             })}
             data-cy="Tab"
           >
             <a
               href={`#${tab.id}`}
               data-cy="TabLink"
-              onClick={() => onTabSelected(tab)}
+              onClick={event => {
+                event.preventDefault();
+
+                if (![...event.target.classList].includes('is-active')) {
+                  onTabSelected(tab.id);
+                }
+              }}
             >
               {tab.id}
             </a>
